@@ -21,10 +21,12 @@ query = {
 uri = URI("#{config['api']}?#{URI.encode_www_form(query)}")
 response = JSON.parse(Net::HTTP.get(uri))
 response['rates'].each do |currency, rate|
+  exchanged_currency_amount = (amount * rate).round(2)
   output[:items].push(
       {
-          :title => "#{(amount * rate).round(2)} #{currency}",
+          :title => "#{exchanged_currency_amount} #{currency}",
           :subtitle => "1 #{config['from']} = #{rate} #{currency}",
+          :arg => exchanged_currency_amount,
           :icon => {
             :path => "./icons/#{currency}.png"
           }
